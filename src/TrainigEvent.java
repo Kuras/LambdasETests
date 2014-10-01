@@ -13,7 +13,7 @@ public class TrainigEvent {
 		return null;
 	}
 
-	public Object getErlybirdDateLimit() {
+	public LocalDate getErlybirdDateLimit() {
 		// TODO Auto-generated method stub
 		return null;
 	}
