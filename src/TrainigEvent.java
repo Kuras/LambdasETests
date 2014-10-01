@@ -3,19 +3,29 @@ import java.time.LocalDate;
 
 public class TrainigEvent {
 
-	public static TrainigEvent called(String string) {
-		
-		return null;
+	private static TrainigEvent trainigEvent = null;
+	LocalDate localDate;
+	
+	private TrainigEvent() {
+		trainigEvent = new TrainigEvent();
+	}
+	
+	public TrainigEvent(String string) {
 	}
 
-	public TrainigEvent scheduleFor(LocalDate curseDate) {
-		// TODO Auto-generated method stub
-		return null;
+	public static TrainigEvent called(String string) {
+		if(trainigEvent == null){
+			return new TrainigEvent(string);
+		}
+		return trainigEvent;
+	}
+
+	public void scheduleFor(LocalDate curseDate) {
+		localDate = curseDate;
 	}
 
 	public LocalDate getErlybirdDateLimit() {
-		// TODO Auto-generated method stub
-		return null;
+		return localDate.minusMonths(1);
 	}
 
 }
