@@ -5,6 +5,7 @@ public class TrainigEvent {
 
 	private static TrainigEvent trainigEvent = null;
 	LocalDate localDate;
+	private String state;
 	
 	private TrainigEvent() {
 		trainigEvent = new TrainigEvent();
@@ -26,6 +27,16 @@ public class TrainigEvent {
 
 	public LocalDate getErlybirdDateLimit() {
 		return localDate.minusMonths(1);
+	}
+
+	public void in(String string) {
+		this.state = string;
+		
+	}
+
+	public String getState() {
+		// TODO Auto-generated method stub
+		return this.state;
 	}
 
 }

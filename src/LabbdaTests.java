@@ -2,6 +2,7 @@ import static org.junit.Assert.*;
 
 import java.time.LocalDate;
 import java.time.Month;
+import java.util.List;
 
 import static org.hamcrest.CoreMatchers.*;
 
@@ -28,6 +29,64 @@ public class LabbdaTests {
 		assertThat(0, is(not(1)));
 		
 		System.out.println(curseDate);
+	}
+	
+	@Test
+	public void test1() {
+		
+		EventService eventService =new EventService();
+		TrainigEvent trainingEvent = TrainigEvent.called("Bdd In action");
+		trainingEvent.in("Melbourne");
+		trainingEvent.scheduleFor(LocalDate.of(2014, Month.MAY, 21));
+		eventService.register(trainingEvent);
+		
+		TrainigEvent trainingEvent1 = TrainigEvent.called("Bdd In action");
+		trainingEvent1.in("Sydney");
+		trainingEvent1.scheduleFor(LocalDate.of(2014, Month.MAY, 6));
+		eventService.register(trainingEvent1);
+		
+		List<TrainigEvent> trainigEvents = eventService.findEventsIn("Melbourne");
+		
+		for (TrainigEvent event : trainigEvents) {
+			// Conventional for loop
+			assertThat(event.getState(), is("Melbourne"));
+			
+			System.out.println(event.getState());
+		}
+		
+	}
+	
+	@Test
+	public void test2() {
+		
+		EventService eventService =new EventService();
+		TrainigEvent trainingEvent = TrainigEvent.called("Bdd In action");
+		trainingEvent.in("Melbourne");
+		trainingEvent.scheduleFor(LocalDate.of(2014, Month.MAY, 21));
+		eventService.register(trainingEvent);
+		
+		TrainigEvent trainingEvent1 = TrainigEvent.called("Bdd In action");
+		trainingEvent1.in("Sydney");
+		trainingEvent1.scheduleFor(LocalDate.of(2014, Month.MAY, 6));
+		eventService.register(trainingEvent1);
+		
+		List<TrainigEvent> trainigEvents = eventService.findEventsIn("Melbourne");
+		
+		//USES lambdas for more expresive expectation
+		trainigEvents.forEach( (TrainigEvent event) -> {
+			
+			assertThat(event.getState(), is("Melbourne"));
+			System.out.println(event.getState());
+		}
+		);
+		
+		for (TrainigEvent event : trainigEvents) {
+			// Conventional for loop
+			assertThat(event.getState(), is("Melbourne"));
+			
+			System.out.println(event.getState());
+		}
+		
 	}
 
 	
