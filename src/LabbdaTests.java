@@ -3,6 +3,7 @@ import static org.junit.Assert.*;
 import java.time.LocalDate;
 import java.time.Month;
 import java.util.List;
+import java.util.function.Predicate;
 
 import static org.hamcrest.CoreMatchers.*;
 
@@ -89,5 +90,28 @@ public class LabbdaTests {
 		
 	}
 
+	
+	@Test
+	public void test3() {
+		
+		EventService eventService =new EventService();
+		
+		TrainigEvent trainingEvent = TrainigEvent.called("Bdd In action");
+		trainingEvent.in("Melbourne");
+		trainingEvent.scheduleFor(LocalDate.of(2014, Month.MAY, 21));
+		eventService.register(trainingEvent);
+		
+		TrainigEvent trainingEvent1 = TrainigEvent.called("Bdd In action");
+		trainingEvent1.in("Sydney");
+		trainingEvent1.scheduleFor(LocalDate.of(2014, Month.MAY, 6));
+		eventService.register(trainingEvent1);
+		
+		List<TrainigEvent> trainigEvents = eventService.findEventsIn("Melbourne");
+		
+		Predicate<TrainigEvent> inMelbourne = event -> event.getState().equals("Melbourne");
+		// using predicate
+		assertThat(trainigEvents.stream().allMatch(inMelbourne), is(true));
+		
+	}
 	
 }
