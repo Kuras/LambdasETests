@@ -5,6 +5,7 @@ import java.time.Month;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
@@ -169,6 +170,34 @@ public class LabbdaTests {
 		List<String> trainigStates = trainigEvents.stream().map((TrainigEvent event) -> event.getState())
 														   .distinct()
 														   .collect(Collectors.toList());
+		
+		trainigStates.forEach(state -> {
+			assertThat(state, containsString("Melbourne"));
+		});
+		
+		Predicate<String> predicate = (String state) -> state.equals("Melbourne");
+		assertThat(trainigStates.stream().allMatch( predicate   ), is(true) );
+	}
+	
+	@Test
+	public void test6() {
+		
+		EventService eventService =new EventService();
+		
+		TrainigEvent trainingEvent = TrainigEvent.called("Bdd In action");
+		trainingEvent.in("Melbourne");
+		trainingEvent.scheduleFor(LocalDate.of(2014, Month.MAY, 21));
+		eventService.register(trainingEvent);
+		
+		TrainigEvent trainingEvent1 = TrainigEvent.called("Bdd In action");
+		trainingEvent1.in("Sydney");
+		trainingEvent1.scheduleFor(LocalDate.of(2014, Month.MAY, 6));
+		eventService.register(trainingEvent1);
+		
+		List<TrainigEvent> trainigEvents = eventService.findEventsIn("Melbourne");
+		
+		Set<String> trainigStates =  trainigEvents.stream().map((TrainigEvent event) -> event.getState())
+														   .collect(Collectors.toSet());
 		
 		trainigStates.forEach(state -> {
 			assertThat(state, containsString("Melbourne"));
