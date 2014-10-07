@@ -2,8 +2,11 @@ import static org.junit.Assert.*;
 
 import java.time.LocalDate;
 import java.time.Month;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 import static org.hamcrest.CoreMatchers.*;
 
@@ -111,7 +114,67 @@ public class LabbdaTests {
 		Predicate<TrainigEvent> inMelbourne = event -> event.getState().equals("Melbourne");
 		// using predicate
 		assertThat(trainigEvents.stream().allMatch(inMelbourne), is(true));
+		assertThat(1, is(1));
 		
 	}
 	
+	@Test
+	public void test4() {
+		
+		EventService eventService =new EventService();
+		
+		TrainigEvent trainingEvent = TrainigEvent.called("Bdd In action");
+		trainingEvent.in("Melbourne");
+		trainingEvent.scheduleFor(LocalDate.of(2014, Month.MAY, 21));
+		eventService.register(trainingEvent);
+		
+		TrainigEvent trainingEvent1 = TrainigEvent.called("Bdd In action");
+		trainingEvent1.in("Sydney");
+		trainingEvent1.scheduleFor(LocalDate.of(2014, Month.MAY, 6));
+		eventService.register(trainingEvent1);
+		
+		List<TrainigEvent> trainigEvents = eventService.findEventsIn("Melbourne");
+		
+//		inMelbourne1 = (TrainigEvent event) -> event.getState().equals("Melbourne");
+		
+		Predicate<TrainigEvent> inMelbourne = (TrainigEvent event) -> event.getState().equals("Melbourne");
+		
+		Predicate<TrainigEvent> inMelbourne2 = (TrainigEvent event) -> {
+				return event.getState().equals("Melbourne");
+			};
+		Predicate<? super TrainigEvent> predicate = inMelbourne2;
+		// using predicate
+		assertThat(trainigEvents.stream().allMatch( predicate  ), is(true) );
+		
+		
+	}
+	
+	@Test
+	public void test5() {
+		
+		EventService eventService =new EventService();
+		
+		TrainigEvent trainingEvent = TrainigEvent.called("Bdd In action");
+		trainingEvent.in("Melbourne");
+		trainingEvent.scheduleFor(LocalDate.of(2014, Month.MAY, 21));
+		eventService.register(trainingEvent);
+		
+		TrainigEvent trainingEvent1 = TrainigEvent.called("Bdd In action");
+		trainingEvent1.in("Sydney");
+		trainingEvent1.scheduleFor(LocalDate.of(2014, Month.MAY, 6));
+		eventService.register(trainingEvent1);
+		
+		List<TrainigEvent> trainigEvents = eventService.findEventsIn("Melbourne");
+		
+		List<String> trainigStates = trainigEvents.stream().map((TrainigEvent event) -> event.getState())
+														   .distinct()
+														   .collect(Collectors.toList());
+		
+		trainigStates.forEach(state -> {
+			assertThat(state, containsString("Melbourne"));
+		});
+		
+		Predicate<String> predicate = (String state) -> state.equals("Melbourne");
+		assertThat(trainigStates.stream().allMatch( predicate   ), is(true) );
+	}
 }
